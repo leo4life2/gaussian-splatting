@@ -24,6 +24,26 @@ from argparse import ArgumentParser
 from arguments import ModelParams, PipelineParams, get_combined_args
 from gaussian_renderer import GaussianModel
 
+def get_camera(existing_cameras, R, T):
+    device = existing_cameras[0].data_device
+    
+    new_camera = Camera(
+        colmap_id=existing_cameras[0].colmap_id,
+        R=R,
+        T=T,
+        FoVx=existing_cameras[0].FoVx,
+        FoVy=existing_cameras[0].FoVy,
+        image=existing_cameras[0].original_image,
+        gt_alpha_mask=None,
+        image_name=existing_cameras[0].image_name,
+        uid=f"new_{np.random.randint(10000)}",
+        trans=existing_cameras[0].trans,
+        scale=existing_cameras[0].scale, 
+        data_device="cuda"
+    )
+
+    return new_camera
+
 def generate_new_cameras(existing_cameras, num_new_cameras=5):
     # Placeholder for the new cameras
     new_cameras = []
